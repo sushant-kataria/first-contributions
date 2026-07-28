@@ -35,7 +35,7 @@ export const demos: DemoEntry[] = [
     cameraTarget: [0, 1.05, 0.15],
     cameraFov: 30,
     backgroundGradient: { inner: '#3a342c', outer: '#12100e' },
-    exposure: 1.05,
+    exposure: 0.95,
     installLights: createToyotaSuvLookDevLights,
     build: (scene) => {
       const model = createToyotaSuvModel({ scale: 1 });

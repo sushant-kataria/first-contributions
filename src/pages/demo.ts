@@ -18,9 +18,9 @@ export function renderDemo(mount: HTMLElement, id: string): () => void {
         <h1>${demo.title}</h1>
         <p class="blurb">${demo.blurb}</p>
         <ul class="facts">
-          <li>Extruded SUV silhouette + wheel arches</li>
+          <li>Extruded profile with wheel-arch cutouts</li>
           <li>3D grille, headlights, cladding, rails</li>
-          <li>Rear / far side still inferred</li>
+          <li>Approximate likeness — not a CAD scan</li>
         </ul>
         <p class="hint">Drag to orbit · scroll to zoom</p>
       </aside>
