@@ -17,7 +17,7 @@ export function renderHome(mount: HTMLElement): () => void {
         <div class="hero-cta">
           ${
             live[0]
-              ? `<a class="cta primary" href="#/demo/${live[0].id}">View the SUV</a>`
+              ? `<a class="cta primary" href="#/demo/${live[0].id}">View the shotgun</a>`
               : ''
           }
           <a class="cta ghost" href="#catalog">Browse catalog</a>

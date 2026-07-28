@@ -2,12 +2,41 @@ import { getDemo } from '../models/registry';
 import { Viewer } from '../scene';
 import { navigate } from '../router';
 
+function factsFor(id: string): string[] {
+  if (id === 'issaca-shotgun') {
+    return [
+      'Full procedural factory (receiver, barrel, optic, grip)',
+      'Live fire VFX: flash, recoil, shell eject',
+      'Action-ready pivots + sculptRuntime sockets',
+    ];
+  }
+  if (id === 'toyota-suv') {
+    return [
+      'Studio cut-out on photo relief',
+      'Thin silhouette for orbit depth',
+      'Single photo — rear / far side not captured',
+    ];
+  }
+  return ['Procedural Three.js model'];
+}
+
 export function renderDemo(mount: HTMLElement, id: string): () => void {
   const demo = getDemo(id);
   if (!demo || demo.status !== 'live' || !demo.build) {
     navigate('#/');
     return () => {};
   }
+
+  const facts = factsFor(id)
+    .map((f) => `<li>${f}</li>`)
+    .join('');
+
+  const refBlock = demo.referenceImage
+    ? `<figure class="ref">
+          <img src="${demo.referenceImage}" alt="${demo.title} reference" />
+          <figcaption>studio reference</figcaption>
+        </figure>`
+    : '';
 
   mount.innerHTML = `
     <div class="demo-page" style="--accent:${demo.accent}">
@@ -17,15 +46,8 @@ export function renderDemo(mount: HTMLElement, id: string): () => void {
         <p class="kicker">${demo.category} · procedural</p>
         <h1>${demo.title}</h1>
         <p class="blurb">${demo.blurb}</p>
-        <figure class="ref">
-          <img src="${import.meta.env.BASE_URL}references/sequoia-studio.png" alt="Studio reference" />
-          <figcaption>studio reference</figcaption>
-        </figure>
-        <ul class="facts">
-          <li>Studio cut-out on photo relief (exact front likeness)</li>
-          <li>Thin extruded silhouette for orbit depth</li>
-          <li>Single photo — rear / far side not captured</li>
-        </ul>
+        ${refBlock}
+        <ul class="facts">${facts}</ul>
         <p class="hint">Drag to orbit · scroll to zoom</p>
       </aside>
     </div>

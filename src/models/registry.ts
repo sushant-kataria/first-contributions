@@ -3,6 +3,10 @@ import {
   createToyotaSuvModel,
   createToyotaSuvLookDevLights,
 } from './toyota-suv/createToyotaSuvModel';
+import {
+  createIssacaShotgunModel,
+  createIssacaShotgunLookDevLights,
+} from './issaca-shotgun/createIssacaShotgunModel';
 
 export interface DemoEntry {
   id: string;
@@ -11,6 +15,7 @@ export interface DemoEntry {
   blurb: string;
   status: 'live' | 'coming-soon';
   accent: string;
+  referenceImage?: string;
   cameraPosition: [number, number, number];
   cameraTarget: [number, number, number];
   cameraFov: number;
@@ -21,7 +26,32 @@ export interface DemoEntry {
   thumbLabel: string;
 }
 
+const BASE = import.meta.env.BASE_URL;
+
 export const demos: DemoEntry[] = [
+  {
+    id: 'issaca-shotgun',
+    title: 'ISSACA 12 Gauge',
+    category: 'gun',
+    blurb:
+      'Bullpup pistol-shotgun rebuilt in code: slate receiver, amber bakelite handguard, ' +
+      'satin barrel, reflex red-dot — with live muzzle flash, recoil, and shell ejection.',
+    status: 'live',
+    accent: '#d98a2c',
+    referenceImage: `${BASE}references/issaca-shotgun.png`,
+    cameraPosition: [1.9, 1.35, 3.5],
+    cameraTarget: [-0.1, 0.55, 0],
+    cameraFov: 32,
+    backgroundGradient: { inner: '#2b2f36', outer: '#0c0d10' },
+    exposure: 1.0,
+    installLights: createIssacaShotgunLookDevLights,
+    build: (scene) => {
+      const model = createIssacaShotgunModel({ shadows: true, scale: 1 });
+      scene.add(model);
+      return model;
+    },
+    thumbLabel: 'Shotgun',
+  },
   {
     id: 'toyota-suv',
     title: 'Toyota Sequoia TRD',
@@ -31,6 +61,7 @@ export const demos: DemoEntry[] = [
       'Orbit reveals single-photo limits (rear / far side not captured).',
     status: 'live',
     accent: '#c4a574',
+    referenceImage: `${BASE}references/sequoia-studio.png`,
     cameraPosition: [0, 1.15, 6.2],
     cameraTarget: [0, 1.05, 0],
     cameraFov: 30,
@@ -61,7 +92,7 @@ export const demos: DemoEntry[] = [
     id: 'sidearm',
     title: 'Sidearm Pistol',
     category: 'gun',
-    blurb: 'Gun models land here next. Same pipeline: reference image → procedural factory.',
+    blurb: 'Coming soon — same procedural pipeline as the ISSACA shotgun.',
     status: 'coming-soon',
     accent: '#9a8f7a',
     cameraPosition: [1.5, 1, 2],
@@ -69,19 +100,6 @@ export const demos: DemoEntry[] = [
     cameraFov: 34,
     backgroundGradient: { inner: '#2c2a26', outer: '#100f0d' },
     thumbLabel: 'Pistol',
-  },
-  {
-    id: 'assault-rifle',
-    title: 'Assault Rifle',
-    category: 'gun',
-    blurb: 'Coming soon — send a clean side-profile studio shot to unlock this slot.',
-    status: 'coming-soon',
-    accent: '#7a8570',
-    cameraPosition: [2, 1, 2.5],
-    cameraTarget: [0, 0.25, 0],
-    cameraFov: 34,
-    backgroundGradient: { inner: '#262820', outer: '#0e100c' },
-    thumbLabel: 'Rifle',
   },
 ];
 
