@@ -78,8 +78,8 @@ export class Viewer {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
     this.controls.maxPolarAngle = Math.PI * 0.49;
-    this.controls.minDistance = 2;
-    this.controls.maxDistance = 16;
+    this.controls.minDistance = 3;
+    this.controls.maxDistance = 24;
     const [tx, ty, tz] = options.cameraTarget ?? [0, 0.9, 0];
     this.controls.target.set(tx, ty, tz);
     this.controls.update();

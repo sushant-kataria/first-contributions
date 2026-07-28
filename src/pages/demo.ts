@@ -17,10 +17,14 @@ export function renderDemo(mount: HTMLElement, id: string): () => void {
         <p class="kicker">${demo.category} · procedural</p>
         <h1>${demo.title}</h1>
         <p class="blurb">${demo.blurb}</p>
+        <figure class="ref">
+          <img src="${import.meta.env.BASE_URL}references/sequoia-studio.png" alt="Studio reference" />
+          <figcaption>studio reference</figcaption>
+        </figure>
         <ul class="facts">
-          <li>Extruded profile with wheel-arch cutouts</li>
-          <li>3D grille, headlights, cladding, rails</li>
-          <li>Approximate likeness — not a CAD scan</li>
+          <li>Studio cut-out on photo relief (exact front likeness)</li>
+          <li>Thin extruded silhouette for orbit depth</li>
+          <li>Single photo — rear / far side not captured</li>
         </ul>
         <p class="hint">Drag to orbit · scroll to zoom</p>
       </aside>

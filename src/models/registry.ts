@@ -24,18 +24,18 @@ export interface DemoEntry {
 export const demos: DemoEntry[] = [
   {
     id: 'toyota-suv',
-    title: 'Toyota Trail SUV',
+    title: 'Toyota Sequoia TRD',
     category: 'car',
     blurb:
-      'Lunar-rock off-road SUV rebuilt in code from a three-quarter studio reference — ' +
-      'honeycomb grille, black cladding, roof rails, and all-terrain wheels.',
+      'Studio cut-out mapped onto a thin photo relief so the showroom view matches the reference. ' +
+      'Orbit reveals single-photo limits (rear / far side not captured).',
     status: 'live',
     accent: '#c4a574',
-    cameraPosition: [5.2, 2.6, 5.8],
-    cameraTarget: [0, 1.05, 0.15],
+    cameraPosition: [0, 1.15, 6.2],
+    cameraTarget: [0, 1.05, 0],
     cameraFov: 30,
-    backgroundGradient: { inner: '#3a342c', outer: '#12100e' },
-    exposure: 0.95,
+    backgroundGradient: { inner: '#cfcbc4', outer: '#1c1a17' },
+    exposure: 1.0,
     installLights: createToyotaSuvLookDevLights,
     build: (scene) => {
       const model = createToyotaSuvModel({ scale: 1 });
