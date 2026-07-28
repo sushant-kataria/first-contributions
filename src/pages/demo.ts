@@ -18,9 +18,9 @@ export function renderDemo(mount: HTMLElement, id: string): () => void {
         <h1>${demo.title}</h1>
         <p class="blurb">${demo.blurb}</p>
         <ul class="facts">
-          <li>Code-only Three.js factory</li>
-          <li>Studio three-quarter reference</li>
-          <li>Rear / far side inferred</li>
+          <li>Extruded SUV silhouette + wheel arches</li>
+          <li>3D grille, headlights, cladding, rails</li>
+          <li>Rear / far side still inferred</li>
         </ul>
         <p class="hint">Drag to orbit · scroll to zoom</p>
       </aside>
