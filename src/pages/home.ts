@@ -43,7 +43,7 @@ export function renderHome(mount: HTMLElement): () => void {
               const href = demo.status === 'live' ? `#/demo/${demo.id}` : undefined;
               const tag = demo.status === 'live' ? 'Live' : 'Soon';
               const thumb = demo.referenceImage
-                ? `<span class="card-thumb has-img" style="--accent:${demo.accent}"><img src="${demo.referenceImage}" alt="" /></span>`
+                ? `<span class="card-thumb has-img" style="--accent:${demo.accent}"><img src="${demo.referenceImage}" alt="" onerror="this.remove(); this.parentElement.classList.remove('has-img'); this.parentElement.textContent='${demo.thumbLabel}'" /></span>`
                 : `<span class="card-thumb" style="--accent:${demo.accent}">${demo.thumbLabel}</span>`;
               const inner = `
                 ${thumb}

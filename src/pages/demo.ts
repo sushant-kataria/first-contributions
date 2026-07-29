@@ -12,9 +12,10 @@ function factsFor(id: string): string[] {
   }
   if (id === 'toyota-suv') {
     return [
-      'Hard-surface factory: body shell, fascia, wheels',
-      'Matte Lunar Rock + hex grille + T-DRL lamps',
-      'TRD hood badges, roof rack, red hub caps',
+      'Bull bar, winch, four driving lights, snorkel',
+      'Roof rack with duffel, dry roll, jerry cans, light bar',
+      'Rear ladder + swing-out spare, rock sliders',
+      'A/T tread blocks on beadlock rims',
     ];
   }
   return ['Procedural Three.js model'];
@@ -33,7 +34,11 @@ export function renderDemo(mount: HTMLElement, id: string): () => void {
 
   const refBlock = demo.referenceImage
     ? `<figure class="ref">
-          <img src="${demo.referenceImage}" alt="${demo.title} reference" />
+          <img
+            src="${demo.referenceImage}"
+            alt="${demo.title} reference"
+            onerror="this.closest('figure').remove()"
+          />
           <figcaption>studio reference</figcaption>
         </figure>`
     : '';

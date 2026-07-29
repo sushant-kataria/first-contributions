@@ -54,26 +54,27 @@ export const demos: DemoEntry[] = [
   },
   {
     id: 'toyota-suv',
-    title: 'Toyota Sequoia TRD',
+    title: 'Overland 4Runner Rig',
     category: 'car',
     blurb:
-      'Hard-surface procedural Sequoia: matte Lunar Rock paint, hex grille with TOYOTA letters, ' +
-      'T-DRL lamps, hood bulge, TRD wheels — orbit the full volume (not a photo card).',
+      'Matte army-green build rebuilt part by part: bull bar with winch and driving lights, ' +
+      'snorkel, loaded roof rack, rear ladder and swing-out spare, A/T tread on beadlock rims — ' +
+      'presented on a wooden display plinth.',
     status: 'live',
-    accent: '#c4a574',
-    referenceImage: `${BASE}references/sequoia-studio.png`,
-    cameraPosition: [3.9, 1.55, 4.6],
-    cameraTarget: [0, 0.95, 0.2],
-    cameraFov: 34,
-    backgroundGradient: { inner: '#cfcbc4', outer: '#1c1a17' },
-    exposure: 1.05,
+    accent: '#7f8a63',
+    referenceImage: `${BASE}references/overland-rig.png`,
+    cameraPosition: [6.9, 3.3, 8.2],
+    cameraTarget: [0, 1.15, 0.0],
+    cameraFov: 30,
+    backgroundGradient: { inner: '#c9ccc6', outer: '#22241f' },
+    exposure: 1.02,
     installLights: createToyotaSuvLookDevLights,
     build: (scene) => {
       const model = createToyotaSuvModel({ scale: 1, shadows: true });
       scene.add(model);
       return model;
     },
-    thumbLabel: 'SUV',
+    thumbLabel: 'Overland',
   },
   {
     id: 'sports-coupe',
