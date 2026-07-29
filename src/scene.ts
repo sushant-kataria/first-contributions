@@ -10,6 +10,9 @@ export interface ViewerOptions {
   backgroundGradient?: { inner: string; outer: string };
   exposure?: number;
   installLights?: (scene: THREE.Scene) => void;
+  minDistance?: number;
+  maxDistance?: number;
+  autoRotate?: boolean;
 }
 
 function makeGradientBackground(inner: string, outer: string): THREE.CanvasTexture {
@@ -78,8 +81,10 @@ export class Viewer {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
     this.controls.maxPolarAngle = Math.PI * 0.49;
-    this.controls.minDistance = 3;
-    this.controls.maxDistance = 24;
+    this.controls.minDistance = options.minDistance ?? 1.4;
+    this.controls.maxDistance = options.maxDistance ?? 24;
+    this.controls.autoRotate = options.autoRotate ?? false;
+    this.controls.autoRotateSpeed = 0.55;
     const [tx, ty, tz] = options.cameraTarget ?? [0, 0.9, 0];
     this.controls.target.set(tx, ty, tz);
     this.controls.update();

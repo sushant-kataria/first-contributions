@@ -57,19 +57,19 @@ export const demos: DemoEntry[] = [
     title: 'Toyota Sequoia TRD',
     category: 'car',
     blurb:
-      'Studio cut-out mapped onto a thin photo relief so the showroom view matches the reference. ' +
-      'Orbit reveals single-photo limits (rear / far side not captured).',
+      'Hard-surface procedural Sequoia: matte Lunar Rock paint, hex grille with TOYOTA letters, ' +
+      'T-DRL lamps, hood bulge, TRD wheels — orbit the full volume (not a photo card).',
     status: 'live',
     accent: '#c4a574',
     referenceImage: `${BASE}references/sequoia-studio.png`,
-    cameraPosition: [0, 1.15, 6.2],
-    cameraTarget: [0, 1.05, 0],
-    cameraFov: 30,
+    cameraPosition: [3.9, 1.55, 4.6],
+    cameraTarget: [0, 0.95, 0.2],
+    cameraFov: 34,
     backgroundGradient: { inner: '#cfcbc4', outer: '#1c1a17' },
-    exposure: 1.0,
+    exposure: 1.05,
     installLights: createToyotaSuvLookDevLights,
     build: (scene) => {
-      const model = createToyotaSuvModel({ scale: 1 });
+      const model = createToyotaSuvModel({ scale: 1, shadows: true });
       scene.add(model);
       return model;
     },

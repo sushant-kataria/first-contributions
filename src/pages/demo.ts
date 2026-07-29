@@ -12,9 +12,9 @@ function factsFor(id: string): string[] {
   }
   if (id === 'toyota-suv') {
     return [
-      'Studio cut-out on photo relief',
-      'Thin silhouette for orbit depth',
-      'Single photo — rear / far side not captured',
+      'Hard-surface factory: body shell, fascia, wheels',
+      'Matte Lunar Rock + hex grille + T-DRL lamps',
+      'TRD hood badges, roof rack, red hub caps',
     ];
   }
   return ['Procedural Three.js model'];
@@ -61,6 +61,8 @@ export function renderDemo(mount: HTMLElement, id: string): () => void {
     backgroundGradient: demo.backgroundGradient,
     exposure: demo.exposure,
     installLights: demo.installLights,
+    minDistance: demo.category === 'gun' ? 1.1 : 3.2,
+    maxDistance: demo.category === 'gun' ? 12 : 28,
   });
 
   demo.build(viewer.scene);
