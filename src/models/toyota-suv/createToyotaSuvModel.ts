@@ -20,8 +20,8 @@ export interface ToyotaSuvOptions {
 }
 
 // --- palette (sampled from the reference sheet) -----------------------------
-const OLIVE = 0x4e5643;
-const OLIVE_DEEP = 0x3f4636;
+const OLIVE = 0x464d3b;
+const OLIVE_DEEP = 0x393f30;
 const TRIM = 0x121212;
 const TRIM_SOFT = 0x1d1d1d;
 const STEEL = 0x8f959c;
@@ -82,7 +82,7 @@ function matRubber(): THREE.MeshPhysicalMaterial {
 
 function matCanvasTan(): THREE.MeshPhysicalMaterial {
   return new THREE.MeshPhysicalMaterial({
-    color: 0xb49a6b,
+    color: 0x9d8a63,
     metalness: 0.0,
     roughness: 0.92,
     sheen: 0.4,
@@ -156,17 +156,27 @@ function makeGrilleMap(): THREE.CanvasTexture {
   cv.width = W;
   cv.height = H;
   const ctx = cv.getContext('2d')!;
-  ctx.fillStyle = '#060606';
+  ctx.fillStyle = '#050505';
   ctx.fillRect(0, 0, W, H);
-  // horizontal slat grille (4Runner-style bars)
+  // horizontal slat grille (4Runner-style bars) — needs a lit top edge or the
+  // whole nose collapses into one black slab
   for (let i = 0; i < 4; i++) {
-    const y = 40 + i * 78;
-    ctx.fillStyle = '#181818';
-    ctx.fillRect(20, y, W - 40, 46);
-    ctx.fillStyle = '#2c2c2c';
-    ctx.fillRect(20, y, W - 40, 5);
-    ctx.fillStyle = '#000';
-    ctx.fillRect(20, y + 46, W - 40, 12);
+    const y = 34 + i * 80;
+    ctx.fillStyle = '#2b2e2b';
+    ctx.fillRect(18, y, W - 36, 50);
+    ctx.fillStyle = '#5b6058';
+    ctx.fillRect(18, y, W - 36, 7);
+    ctx.fillStyle = '#020202';
+    ctx.fillRect(18, y + 50, W - 36, 14);
+  }
+  // mesh behind the slats
+  ctx.strokeStyle = 'rgba(120,126,118,0.22)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 12) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, H);
+    ctx.stroke();
   }
   const tex = new THREE.CanvasTexture(cv);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -205,6 +215,36 @@ function makePaintDetail(): THREE.CanvasTexture {
   const tex = new THREE.CanvasTexture(cv);
   tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
   tex.repeat.set(4, 2);
+  return tex;
+}
+
+/** Trail dust that fades upward — clean-room paint is a dead giveaway for CG. */
+function makeDustDecal(): THREE.CanvasTexture {
+  const W = 512;
+  const H = 128;
+  const cv = document.createElement('canvas');
+  cv.width = W;
+  cv.height = H;
+  const ctx = cv.getContext('2d')!;
+  ctx.clearRect(0, 0, W, H);
+  const grad = ctx.createLinearGradient(0, H, 0, 0);
+  grad.addColorStop(0, 'rgba(158,142,112,0.55)');
+  grad.addColorStop(0.45, 'rgba(158,142,112,0.2)');
+  grad.addColorStop(1, 'rgba(158,142,112,0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+  // splatter so the band isn't a clean gradient stripe
+  for (let i = 0; i < 900; i++) {
+    const y = H - Math.pow(Math.random(), 1.6) * H;
+    const a = 0.05 + Math.random() * 0.22;
+    ctx.fillStyle = `rgba(170,154,122,${a})`;
+    const r = 1 + Math.random() * 4;
+    ctx.beginPath();
+    ctx.arc(Math.random() * W, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  const tex = new THREE.CanvasTexture(cv);
+  tex.colorSpace = THREE.SRGBColorSpace;
   return tex;
 }
 
@@ -319,10 +359,11 @@ function createSideProfile(): THREE.Shape {
 function createBodyShell(mat: THREE.Material, shadows: boolean): THREE.Mesh {
   const geo = new THREE.ExtrudeGeometry(createSideProfile(), {
     depth: BODY_HALF_W * 2,
+    // crisp shut lines — fat bevels rounded the body into a soap bar
     bevelEnabled: true,
-    bevelThickness: 0.045,
-    bevelSize: 0.04,
-    bevelSegments: 4,
+    bevelThickness: 0.018,
+    bevelSize: 0.016,
+    bevelSegments: 2,
     curveSegments: 36,
   });
   geo.rotateY(-Math.PI / 2);
@@ -404,11 +445,12 @@ function buildWheel(
 
   // beadlock rim ring + bolts — gunmetal so the wheel face actually catches
   // light instead of reading as one black disc
+  // gunmetal, not chrome — mirror-bright rims looked like a die-cast toy
   const rimMat = new THREE.MeshPhysicalMaterial({
-    color: 0x9aa1a6,
-    metalness: 0.92,
-    roughness: 0.32,
-    envMapIntensity: 1.3,
+    color: 0x6b7176,
+    metalness: 0.9,
+    roughness: 0.44,
+    envMapIntensity: 0.95,
   });
   const ring = new THREE.Mesh(new THREE.TorusGeometry(0.34, 0.035, 12, 44), rimMat);
   ring.rotation.y = Math.PI / 2;
@@ -467,10 +509,10 @@ function buildWheel(
 
   // 6 spokes on the outer face
   const spokeMat = new THREE.MeshPhysicalMaterial({
-    color: 0x5b6166,
-    metalness: 0.88,
-    roughness: 0.36,
-    envMapIntensity: 1.25,
+    color: 0x40454a,
+    metalness: 0.85,
+    roughness: 0.46,
+    envMapIntensity: 0.9,
   });
   for (let i = 0; i < 6; i++) {
     const a = (i / 6) * Math.PI * 2;
@@ -745,6 +787,26 @@ function buildRear(parent: THREE.Object3D, shadows: boolean): void {
 
   const black = matTrim(0.6, 0x141414);
 
+  // tailgate detail so the back isn't one flat panel
+  addMesh(rear, new THREE.BoxGeometry(1.6, 0.05, 0.05), black, 'tailgatePress', shadows, [
+    0,
+    1.02,
+    -2.53,
+  ]);
+  addMesh(rear, new RoundedBoxGeometry(0.5, 0.12, 0.05, 1, 0.02), black, 'tailgateHandle', shadows, [
+    0,
+    1.44,
+    -2.54,
+  ]);
+  addMesh(
+    rear,
+    new RoundedBoxGeometry(0.52, 0.24, 0.04, 1, 0.02),
+    matTrim(0.7, 0x2b2b2b),
+    'plateRecess',
+    shadows,
+    [0.42, 1.06, -2.55],
+  );
+
   // rear bumper
   addMesh(rear, new RoundedBoxGeometry(2.0, 0.36, 0.32, 3, 0.05), black, 'rearBumper', shadows, [
     0,
@@ -777,22 +839,22 @@ function buildRear(parent: THREE.Object3D, shadows: boolean): void {
   // swing-out spare tyre carrier
   const carrier = new THREE.Group();
   carrier.name = 'spareCarrier';
-  carrier.position.set(0.1, 1.15, -2.56);
+  carrier.position.set(0.02, 1.18, -2.58);
   rear.add(carrier);
-  addMesh(carrier, new RoundedBoxGeometry(1.1, 0.09, 0.09, 2, 0.02), black, 'carrierArm', shadows, [
-    -0.1,
-    -0.3,
+  addMesh(carrier, new RoundedBoxGeometry(1.16, 0.09, 0.09, 2, 0.02), black, 'carrierArm', shadows, [
+    -0.06,
+    -0.34,
     0,
   ]);
-  addMesh(carrier, new RoundedBoxGeometry(0.09, 0.8, 0.09, 2, 0.02), black, 'carrierPost', shadows, [
+  addMesh(carrier, new RoundedBoxGeometry(0.09, 0.86, 0.09, 2, 0.02), black, 'carrierPost', shadows, [
     -0.62,
-    0.08,
+    0.06,
     0,
   ]);
 
   const spare = new THREE.Group();
   spare.name = 'spareWheel';
-  spare.position.set(0.05, 0.06, -0.16);
+  spare.position.set(0.0, 0.02, -0.18);
   spare.rotation.y = Math.PI / 2;
   buildWheel(spare, 'spareTyre', 0, 0, shadows);
   spare.children[0]!.position.set(0, 0, 0);
@@ -862,12 +924,12 @@ function buildDisplayBase(parent: THREE.Object3D, shadows: boolean): void {
   const earthTex = makePaintDetail();
   earthTex.repeat.set(3, 5);
   const earthMat = new THREE.MeshPhysicalMaterial({
-    color: 0x5f5748,
+    color: 0x453f34,
     roughness: 1,
     metalness: 0.0,
     roughnessMap: earthTex,
     bumpMap: earthTex,
-    bumpScale: 0.02,
+    bumpScale: 0.03,
   });
   const earth = addMesh(
     base,
@@ -900,7 +962,7 @@ function buildDisplayBase(parent: THREE.Object3D, shadows: boolean): void {
   ao.name = 'contactShadow';
   base.add(ao);
 
-  const rockMat = new THREE.MeshPhysicalMaterial({ color: 0x7a7365, roughness: 0.95, metalness: 0.0 });
+  const rockMat = new THREE.MeshPhysicalMaterial({ color: 0x56513f, roughness: 0.98, metalness: 0.0 });
   const rockSpots: Array<[number, number, number]> = [
     [1.32, 0.02, 1.6],
     [-1.35, 0.03, 0.5],
@@ -1097,6 +1159,24 @@ export function createToyotaSuvModel(options: ToyotaSuvOptions = {}): THREE.Grou
     envMapIntensity: 0.6,
   });
   addMesh(fascia, new THREE.PlaneGeometry(1.62, 0.38), grilleMat, 'grille', false, [0, 1.22, 0.1]);
+  // body-colour surround so the grille reads as an opening, not a black panel
+  addMesh(fascia, new RoundedBoxGeometry(1.86, 0.09, 0.16, 1, 0.02), paint, 'grilleBrowTop', shadows, [
+    0,
+    1.46,
+    0.0,
+  ]);
+  addMesh(fascia, new RoundedBoxGeometry(1.86, 0.09, 0.16, 1, 0.02), paint, 'grilleBrowBot', shadows, [
+    0,
+    0.99,
+    0.0,
+  ]);
+  for (const side of [-1, 1] as const) {
+    addMesh(fascia, new RoundedBoxGeometry(0.1, 0.56, 0.16, 1, 0.02), paint, `grilleEdge${side}`, shadows, [
+      side * 0.92,
+      1.22,
+      0.0,
+    ]);
+  }
 
   // headlights
   for (const side of [-1, 1] as const) {
@@ -1245,6 +1325,28 @@ export function createToyotaSuvModel(options: ToyotaSuvOptions = {}): THREE.Grou
       -0.28,
     ]);
   }
+
+  // trail dust up the flanks and across the tailgate
+  const dustTex = makeDustDecal();
+  const dustMat = new THREE.MeshBasicMaterial({
+    map: dustTex,
+    transparent: true,
+    depthWrite: false,
+    opacity: 0.5,
+  });
+  for (const side of [-1, 1] as const) {
+    const dust = new THREE.Mesh(new THREE.PlaneGeometry(4.5, 0.5), dustMat);
+    dust.position.set(side * 1.062, 0.86, -0.1);
+    dust.rotation.y = (side * Math.PI) / 2;
+    dust.renderOrder = 2;
+    dust.name = `dust${side < 0 ? 'L' : 'R'}`;
+    rig.add(dust);
+  }
+  const dustRear = new THREE.Mesh(new THREE.PlaneGeometry(1.9, 0.5), dustMat);
+  dustRear.position.set(0, 0.92, -2.52);
+  dustRear.rotation.y = Math.PI;
+  dustRear.renderOrder = 2;
+  rig.add(dustRear);
 
   // snorkel up the passenger A-pillar
   const snorkel = new THREE.Group();
@@ -1406,10 +1508,11 @@ export function createToyotaSuvLookDevLights(scene: THREE.Scene): void {
   kickL.position.set(-9, 0.9, -0.5);
   scene.add(kickL);
 
-  const bounce = new THREE.DirectionalLight(0xece7dd, 0.4);
+  const bounce = new THREE.DirectionalLight(0xece7dd, 0.22);
   bounce.position.set(0, -2, 2.5);
   scene.add(bounce);
 
-  const hemi = new THREE.HemisphereLight(0xf4f6f8, 0x3b382f, 0.55);
+  // keep ambient low so matte paint holds its value instead of washing pastel
+  const hemi = new THREE.HemisphereLight(0xdfe6ee, 0x2e2c25, 0.34);
   scene.add(hemi);
 }
